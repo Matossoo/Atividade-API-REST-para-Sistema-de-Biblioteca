@@ -1,0 +1,125 @@
+### Requisições de teste (extensão REST Client do VS Code)
+@base = http://localhost:3000
+
+### ---------- LIVROS ----------
+GET {{base}}/livros
+
+###
+GET {{base}}/livros/1
+
+###
+GET {{base}}/livros/busca/casmurro
+
+###
+GET {{base}}/livros/ordenados?campo=ano_publicacao&ordem=desc
+
+###
+POST {{base}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Vidas Secas",
+  "autor": "Graciliano Ramos",
+  "isbn": "9788501000001",
+  "ano_publicacao": 1938,
+  "categoria": "Romance",
+  "quantidade": 2
+}
+
+###
+PUT {{base}}/livros/7
+Content-Type: application/json
+
+{
+  "titulo": "Vidas Secas (2ª edição)",
+  "autor": "Graciliano Ramos",
+  "isbn": "9788501000001",
+  "ano_publicacao": 1938,
+  "categoria": "Romance",
+  "quantidade": 4
+}
+
+###
+DELETE {{base}}/livros/7
+
+### ---------- USUÁRIOS ----------
+GET {{base}}/usuarios
+
+###
+GET {{base}}/usuarios/1
+
+###
+POST {{base}}/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Diego Reis",
+  "cpf": "55566677788",
+  "email": "diego@email.com",
+  "telefone": "(47) 98888-0000"
+}
+
+###
+PUT {{base}}/usuarios/4
+Content-Type: application/json
+
+{
+  "nome": "Diego R. Reis",
+  "cpf": "55566677788",
+  "email": "diego@email.com",
+  "telefone": "(47) 98888-1111"
+}
+
+###
+DELETE {{base}}/usuarios/4
+
+### ---------- EMPRÉSTIMOS ----------
+GET {{base}}/emprestimos
+
+###
+GET {{base}}/emprestimos/1
+
+### Registrar empréstimo
+POST {{base}}/emprestimos
+Content-Type: application/json
+
+{
+  "livro_id": 3,
+  "usuario_id": 3,
+  "data_emprestimo": "2026-09-24",
+  "data_prevista_devolucao": "2026-10-08"
+}
+
+### Registrar devolução
+PUT {{base}}/emprestimos/3
+Content-Type: application/json
+
+{
+  "data_devolucao": "2026-10-01"
+}
+
+### ---------- ERROS ESPERADOS ----------
+### 400 - campos obrigatórios ausentes
+POST {{base}}/livros
+Content-Type: application/json
+
+{ "titulo": "Sem os demais campos" }
+
+### 404 - livro inexistente
+GET {{base}}/livros/999
+
+### 409 - ISBN duplicado
+POST {{base}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Outro Dom Casmurro",
+  "autor": "Machado de Assis",
+  "isbn": "9788535911664",
+  "ano_publicacao": 1899,
+  "categoria": "Romance",
+  "quantidade": 1
+}
+
+### 409 - excluir livro com empréstimo vinculado
+DELETE {{base}}/livros/1
